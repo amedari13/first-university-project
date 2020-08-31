@@ -9,7 +9,6 @@
 //с данными класса вектор и числом int.
 
 using System;
-using System.Resources;
 
 namespace _3_1_fiirst_try
 {
@@ -19,11 +18,23 @@ namespace _3_1_fiirst_try
         public int[] array;  // массив
         public bool status;  // переменная состояния
 
-        public Vector(int qqq)//конструктор
+        public Vector(int tmp)//конструктор
         {
-            array = new int[qqq];
-            quantity = qqq;
+            array = new int[tmp];
+            quantity = tmp;
             status = true;
+
+            for (int i = 0; i < quantity; i++)
+            {
+                array[i] = 0;
+            }
+
+        }
+
+        public int this[int i]//индексатор
+        {
+            get { return array[i]; }
+            set { array[i] = value; }
         }
 
         public void RandomFill() //рандомизация
@@ -35,43 +46,28 @@ namespace _3_1_fiirst_try
             }
         }
 
-        public int Add() //сложение
+        public int[] Add(int number) //сложение
         {
-            Console.WriteLine("\nEnter the indices of the elements you want to add:");
-            try
+            for (int i = 0; i < quantity; i++)
             {
-                int a = Convert.ToInt32(Console.ReadLine()); int b = Convert.ToInt32(Console.ReadLine());
-                return array[a] + array[b];
+                array[i] += number;
             }
-            catch
-            {
-                status = false;
-                Console.WriteLine("\nAn input exception was founded. Try again...");
-                return -1;
-            }
-            
+            return array;
         }
 
-        public int Multiply() //умножение
+        public int[] Multiply(int number) //умножение
         {
-            Console.WriteLine("\nEnter the indices of the elements you want to multiply:");
-           try
-           {
-                int a = Convert.ToInt32(Console.ReadLine()); int b = Convert.ToInt32(Console.ReadLine());
-                return array[a] * array[b];
-           }
-           catch
-           {
-               status = false;
-               Console.WriteLine("\nAn input exception was founded. Try again...");
-               return -1;
-           }
-
+            for (int i = 0; i < quantity; i++)
+            {
+                array[i] *= number;
+            }
+            return array;
         }
 
         public void Output() //вывод
         {
-            for(int i = 0; i < quantity; i++) {
+            for (int i = 0; i < quantity; i++)
+            {
                 Console.WriteLine(array[i] + " ");
             }
             Console.WriteLine($"The status is {status}\n");
@@ -87,15 +83,10 @@ namespace _3_1_fiirst_try
 
                 Vector v = new Vector(quantity);
 
-                for (int i = 0; i < v.quantity; i++)
-                {
-                    v.array[i] = 0;
-                }
-
                 v.RandomFill();
                 v.status = true;
 
-                Console.WriteLine("Your original array: ");
+                Console.WriteLine("\nYour original array: ");
                 v.Output();
 
                 Console.WriteLine("MENU:\n1)Add\n2)Multiply\n3)Output\n ");
@@ -107,12 +98,40 @@ namespace _3_1_fiirst_try
                     choice = Convert.ToInt32(Console.ReadLine());
                     switch (choice)
                     {
-                        case 1: Console.WriteLine(v.Add()); break;
-                        case 2: Console.WriteLine(v.Multiply()); break;
+                        case 1:
+                            Console.WriteLine("\nEnter the number you want to add:");
+                            try
+                            {
+                                int number = Convert.ToInt32(Console.ReadLine());
+                                v.Add(number); 
+                                v.Output();  break;
+                            }
+                            catch
+                            {
+                                v.status = false;
+                                Console.WriteLine("\nAn input exception was founded. Try again...\n");
+                                break;
+                            }
+
+                        case 2:
+                            Console.WriteLine("\nEnter the number you want to multiply:");
+                            try
+                            {
+                                int number = Convert.ToInt32(Console.ReadLine());
+                                v.Multiply(number);
+                                v.Output(); break;
+                            }
+                            catch
+                            {
+                                v.status = false;
+                                Console.WriteLine("\nAn input exception was founded. Try again...\n");
+                                break;
+                            }
+                           
                         case 3: v.Output(); break;
                         default: return;
                     }
-                }              
+                }
             }
         }
     }
