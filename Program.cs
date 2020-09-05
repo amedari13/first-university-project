@@ -12,12 +12,37 @@ using System;
 
 namespace _3_1_fiirst_try
 {
-    class Vector
+    public class VectorFactory  //вместо конструктора паттерн одиночка
+    {
+        private static readonly Lazy<VectorFactory> instanceHolder =
+            new Lazy<VectorFactory>(() => new VectorFactory());//лямбда функция вызывающаяся лениво, 
+                                                               //т.е. объект будет создан только после того, как к нему обратяться
+        private VectorFactory()
+        {
+        }
+
+        public Vector createVector(int x)
+        {
+            return new Vector(x);
+        }
+
+        public static VectorFactory Instance
+        {
+            get
+            {
+                return instanceHolder.Value;
+            }
+        }
+    }
+
+
+    public class Vector
     {
         public int quantity; //колличество элементов массива
         public int[] array;  // массив
         public bool status;  // переменная состояния
 
+        // на выбор)))
         public Vector(int tmp)//конструктор
         {
             array = new int[tmp];
@@ -30,6 +55,8 @@ namespace _3_1_fiirst_try
             }
 
         }
+
+        ~Vector() { Console.WriteLine("\nThe class \"Vector was destroyed\"\n"); }//деструктор
 
         public int this[int i]//индексатор
         {
@@ -81,7 +108,7 @@ namespace _3_1_fiirst_try
                 Console.WriteLine("Quantity of elements in your array:");
                 int quantity = Convert.ToInt32(Console.ReadLine());
 
-                Vector v = new Vector(quantity);
+                Vector v = VectorFactory.Instance.createVector(quantity);
 
                 v.RandomFill();
                 v.status = true;
@@ -103,8 +130,8 @@ namespace _3_1_fiirst_try
                             try
                             {
                                 int number = Convert.ToInt32(Console.ReadLine());
-                                v.Add(number); 
-                                v.Output();  break;
+                                v.Add(number);
+                                v.Output(); break;
                             }
                             catch
                             {
@@ -127,7 +154,7 @@ namespace _3_1_fiirst_try
                                 Console.WriteLine("\nAn input exception was founded. Try again...\n");
                                 break;
                             }
-                           
+
                         case 3: v.Output(); break;
                         default: return;
                     }
